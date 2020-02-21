@@ -1,0 +1,40 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2020-02-21T19:35:48Z",
+  "id": "flutter-movies-app",
+  "duration": 24,
+  "title": "Flutter Movies App",
+  "authors": "Muhammad Fathy Rashad",
+  "summary": "In this codelab, you'll build a simple movies app using flutter and TMDB API.",
+  "source": "1uSBaqC7tJsPKqF3ni7OBOX-J0xccV4IdX202r5ETf4U",
+  "theme": "flutter",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "Flutter"
+  ],
+  "tags": [
+    "cds17",
+    "chrome-dev-summit-2016",
+    "devfest18",
+    "gdd17",
+    "io2016",
+    "io2017",
+    "io2018",
+    "io2019",
+    "jsconfeu",
+    "kiosk",
+    "pwa-dev-summit",
+    "pwa-roadshow",
+    "tag-web",
+    "typtwd17",
+    "web"
+  ],
+  "feedback": "https://github.com/googlecodelabs/your-first-pwapp/issues",
+  "ga": "UA-52746336-1",
+  "url": "flutter-movies-app"
+}

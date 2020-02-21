@@ -1,0 +1,440 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>Flutter Movies App</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid="UA-52746336-1"
+                  id="flutter-movies-app"
+                  title="Flutter Movies App"
+                  environment="web"
+                  feedback-link="https://github.com/googlecodelabs/your-first-pwapp/issues">
+    
+      <google-codelab-step label="Introduction" duration="0">
+        <p><strong>Last Updated:</strong> 2020-02-21</p>
+<p><strong>Author: </strong><a href="https://www.mfrashad.com/" target="_blank">Muhammad Fathy Rashad</a></p>
+<h2 is-upgraded><strong>What is Flutter?</strong></h2>
+<p>Flutter is Google&#39;s UI toolkit for building beautiful, natively compiled applications for mobile, web, and desktop from a single codebase. Flutter works with existing code, is used by developers and organizations around the world, and is free and open source.</p>
+<p>In this codelab, you&#39;ll create a simple mobile Flutter app. If you&#39;re familiar with object-oriented code and basic programming concepts—such as variables, loops, and conditionals—then you can complete the codelab. You don&#39;t need previous experience with Dart or mobile programming.</p>
+<h2 is-upgraded><strong>What you&#39;ll build</strong></h2>
+<p>In this codelab, you&#39;re going to build a simple movie app using Flutter and TMDB API. Your app will fetch the data of several movies from TMDB, and show it in a beautiful list on the app.</p>
+<p>The following image shows the resulting app of this codelab:</p>
+<p class="image-container"><img style="width: 173.54px" src="img\329a5f253d67cc01.png"></p>
+<h2 class="checklist" is-upgraded><strong>What you&#39;ll learn</strong></h2>
+<ul class="checklist">
+<li>How to create a flutter app</li>
+<li>How to display image and text</li>
+<li>How to display a list</li>
+<li>How to fetch data from an API in flutter.</li>
+</ul>
+<p>This codelab is focused on Progressive Web Apps. Non-relevant concepts and code blocks are glossed over and are provided for you to simply copy and paste.</p>
+<h2 is-upgraded><strong>What you&#39;ll need</strong></h2>
+<ul>
+<li>Flutter SDK</li>
+<li>Android Studio or your preferred IDE</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Set up your Flutter environment" duration="2">
+        <p>You need two pieces of software—the <a href="https://flutter.io/get-started/install/" target="_blank">Flutter SDK</a> and <a href="https://flutter.io/get-started/editor/" target="_blank">an editor</a>. (The codelab assumes that you&#39;re using Android Studio, but you can use your preferred editor.)</p>
+<p>To install this you can follow the <a href="https://flutter.dev/docs/get-started/install" target="_blank">official installation guide</a> or you can use <a href="https://docs.google.com/document/d/16lCB3lQc_isiVk93uvhgM8fLASBE4E-w52C0FDXR8cQ/edit?usp=sharing" target="_blank">our own guide</a> (Windows only) for simpler setup with images or visual aid.</p>
+<p>You can run the codelab by using any of the following devices:</p>
+<ul>
+<li>A physical <a href="https://flutter.io/setup-macos/#set-up-your-android-device" target="_blank">Android</a> or <a href="https://flutter.io/setup-macos/#deploy-to-ios-devices" target="_blank">iOS</a> device connected to your computer and set to developer mode</li>
+<li>The<a href="https://flutter.io/setup-macos/#set-up-the-ios-simulator" target="_blank"> iOS simulator</a> (requires installing Xcode tools)</li>
+<li>The <a href="https://flutter.io/setup-macos/#set-up-the-android-emulator" target="_blank">Android Emulator</a> (requires setup in Android Studio)</li>
+<li>A browser (Chrome is required for debugging)</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Create the starter app" duration="2">
+        <p><img style="width: 24.00px" src="img\b2f84ff91b0e1396.png">Create a simple, templated Flutter app by using the instructions in <a href="https://flutter.dev/docs/get-started/test-drive#androidstudio" target="_blank">Create the app</a>. Enter startup_namer (instead of myapp) as the project name. You&#39;ll modify the starter app to create the finished app.</p>
+<p>Tip: If you don&#39;t see the ability to start a new Flutter project as an option in your IDE, then make sure that you have the <a href="https://flutter.io/get-started/editor/#androidstudio" target="_blank">plugins installed for Flutter and Dart</a>.</p>
+<p>You&#39;ll mostly edit lib/main.dart, where the Dart code lives.</p>
+<p><img style="width: 24.00px" src="img\b2f84ff91b0e1396.png"> Replace the contents of lib/main.dart.</p>
+<p>Delete all of the code from lib/main.dart and replace it with the following code, which displays &#34;Hello World&#34; in the center of the screen.</p>
+<h3 is-upgraded>lib/main.dart</h3>
+<pre><code>import &#39;package:flutter/material.dart&#39;;
+
+void main() =&gt; runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: &#39;Welcome to Flutter&#39;,
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text(&#39;Welcome to Flutter&#39;),
+        ),
+        body: const Center(
+          child: const Text(&#39;Hello World&#39;),
+        ),
+      ),
+    );
+  }
+}</code></pre>
+<p>Tip: When pasting code into your app, indentation can become skewed. You can fix it with the following Flutter tools:</p>
+<ul>
+<li>Android Studio/IntelliJ IDEA: Right-click the Dart code and select Reformat Code with dartfmt.</li>
+<li>VS Code: Right-click and select Format Document.</li>
+<li>Terminal: Run flutter format &lt;filename&gt;.</li>
+</ul>
+<p><img style="width: 24.00px" src="img\b2f84ff91b0e1396.png"> <a href="https://flutter.io/get-started/test-drive/#androidstudio" target="_blank">Run the app</a>. You should see either Android or iOS output, depending on your device.</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p>Android</p>
+</td><td colspan="1" rowspan="1"><p>iOS</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p class="image-container"><img style="width: 488.00px" src="img\f9df7832965ede9f.png"></p>
+</td><td colspan="1" rowspan="1"><p class="image-container"><img style="width: 350.00px" src="img\a65ddf4649d963e9.png"></p>
+</td></tr>
+</table>
+<p>Tip: The first time that you run on a physical device, it can take a while to load. Afterward, you can use hot reload for quick updates. In supported IDEs, Save also performs a hot reload if the app is running. When running an app directly from the console using flutter run, enter r to perform hot reload.</p>
+<p><img style="width: 27.00px" src="img\cf1e10b838bf60ee.png"> Observations</p>
+<ul>
+<li>This example creates a Material app. <a href="https://material.io/guidelines/" target="_blank">Material</a> is a visual-design language that&#39;s standard on mobile and the web. Flutter offers a rich set of Material widgets.</li>
+<li>The main method uses arrow (=&gt;) notation. Use arrow notation for one-line functions or methods.</li>
+<li>The app extends StatelessWidget, which makes the app itself a widget. In Flutter, almost everything is a widget, including alignment, padding, and layout.</li>
+<li>The Scaffold widget, from the Material library, provides a default app bar, a title, and a body property that holds the widget tree for the home screen. The widget subtree can be quite complex.</li>
+<li>A widget&#39;s main job is to provide a build method that describes how to display the widget in terms of other, lower-level widgets.</li>
+<li>The body for this example consists of a Center widget containing a Text child widget. The Center widget aligns its widget subtree to the center of the screen.</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Add and style text" duration="3">
+        <h2 is-upgraded><strong>Plan the app layout</strong></h2>
+<p>Before we start coding anything, we should plan how we want to layout the screen to achieve our target look.</p>
+<p>From this image, you can infer how the widget tree looks like.</p>
+<h2 is-upgraded><strong>Add header text</strong></h2>
+<p>Replace the Scaffold body with a Column. Column have a children property where you can give a list of Widgets to it. Then, put a Text widget as our header inside the Column children.</p>
+<p><code>lib/main.dart</code></p>
+<pre><code>class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: &#39;Movies&#39;,                   //Change title to ‘Movies&#39;
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text(&#39;Movies&#39;),   //Change title to ‘Movies&#39;
+        ),
+        body: Column(            //Add from this line
+          children: &lt;Widget&gt;[
+            Text(&#34;Discovery&#34;)
+          ],
+        )                       //Until this line
+      ),
+    );
+  }
+}</code></pre>
+<p>After you changed this you will see the text shows on the screen. However it looks nothing like our desired look, which is why you will stylize it.</p>
+<p class="image-container"><img style="width: 277.55px" src="img\7eea991f66435ebf.png"></p>
+<h2 is-upgraded><strong>Stylize text</strong></h2>
+<p>The Text widget have a style property, which expects a TextStyle widget. In TextStyle widget you can set the font size, weight, style and many others properties.</p>
+<aside class="special"><p>Tip: In Android Studio, you can place your text cursor on a widget and press Ctrl+Q to view the available widget parameters</p>
+</aside>
+<p>We will increase the font size and bold it.</p>
+<p><code>lib/main.dart</code></p>
+<pre><code>class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: &#39;Movies&#39;,
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text(&#39;Movies&#39;),
+        ),
+        body: Column(
+          children: &lt;Widget&gt;[
+            Text(&#34;Discover&#34;,          //Edit from this line
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold
+              )
+            )                    //To this line
+          ],
+        )
+      ),
+    );
+  }
+}</code></pre>
+<p>The result should be like this.</p>
+<p class="image-container"><img style="width: 308.12px" src="img\26b2a7522deafa8c.png"></p>
+<h2 is-upgraded><strong>Add padding</strong></h2>
+<p> It looks better now, but you will notice the text is too close to the edge and we want it to have some space. The solution for this is Padding. You can wrap the Text in a Padding or Container widget. Both have a padding property where it expects EdgeInsets widget.</p>
+<aside class="special"><p>Tip: In Android Studio, you can place your text cursor on a Widget, then you can click on a light bulb icon that will appear and select &#34;Wrap with Padding&#34; for shortcut.</p>
+</aside>
+<p><code>lib/main.dart</code></p>
+<pre><code>class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: &#39;Movies&#39;,
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text(&#39;Movies&#39;),
+        ),
+        body: Column(
+          children: &lt;Widget&gt;[
+            Padding(                  //Edit from this line
+              padding: const EdgeInsets.all(12.0),
+              child: Text(&#34;Discover&#34;,
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold
+                )
+              ),
+            )                     //To this line
+          ],
+        )
+      ),
+    );
+  }
+}</code></pre>
+<p>The results should be like this:</p>
+<p class="image-container"><img style="width: 294.25px" src="img\a1a5d49ae8272438.png"></p>
+<p>Congratulations! Finally, the header looks like what we want. Now we can move to the next step.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Create a movie card" duration="3">
+        <p>In this section we will create a movie card as shown in our final app image, but only one card and not a list of cards..</p>
+<h2 is-upgraded><strong>Add Card</strong></h2>
+<p>Flutter has a Card widget, which gives us a shadow effect. It has elevation properties which determine how heavy the shadow will be. However Card does not have a width or height property. So we add a Container widget inside the card to set its size.</p>
+<p><code>lib/main.dart</code></p>
+<pre><code>class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: &#39;Movies&#39;,
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text(&#39;Movies&#39;),
+        ),
+        body: Column(
+          children: &lt;Widget&gt;[
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Text(&#34;Discover&#34;,
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold
+                )
+              ),
+            ),
+            Padding(          // Add from this line
+              padding: const EdgeInsets.all(8.0),
+              child: Card(
+                elevation: 5,
+                child: Container(
+                  height: 200,
+                ),
+              ),
+            )                // Until this line
+          ],
+        )
+      ),
+    );
+  }
+}</code></pre>
+<p>The results should be like this:</p>
+<p class="image-container"><img style="width: 298.73px" src="img\e2710c7164324633.png"></p>
+<h2 is-upgraded><strong>Modularize your code</strong></h2>
+<p>Although we have a nice card now, the code has become bigger and looks messy. It is time for us to modularize the code to make it easier to manage and also reusable. We will create our own custom widget that will contain the movie card. As the movie card data will not change, it will be a stateless widget.</p>
+<aside class="special"><p><strong>Tip:</strong> In Android Studio, you can right click on the Widget -&gt; Refactor -&gt; Extract -&gt; Extract Flutter Widget</p>
+<p><strong>Tip: </strong>You can also type ‘stless&#39; to create a stateless widget quickly. Type ‘stful&#39; for stateful widget.</p>
+</aside>
+<p><code>lib/main.dart</code></p>
+<pre><code>class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: &#39;Movies&#39;,
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text(&#39;Movies&#39;),
+        ),
+        body: Column(
+          children: &lt;Widget&gt;[
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Text(&#34;Discover&#34;,
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold
+                )
+              ),
+            ),
+            MovieCard()         //Edit this line
+          ],
+        )
+      ),
+    );
+  }
+}
+
+class MovieCard extends StatelessWidget {     //Add from this line
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Card(
+        elevation: 5,
+        child: Container(
+          height: 200,
+        ),
+      ),
+    );
+  }
+}</code></pre>
+<p>The resulting screen should have no changes from the previous one as we are not adding anything, but only improving our code to be better.</p>
+<p>Now you have your own MovieCard widget that can be easily reused. For example, you can add another MovieCard inside the column so that you will have 2 cards.</p>
+<h2 is-upgraded><strong>Add Image to the card</strong></h2>
+<p>Next, we will add the movie poster inside the card. Note that we will not put Image directly inside the card. Based on what we planned on the layout before, the card have two part: the movie poster and the movie description. Hence we need to use Row component. Additionally we will also wrap the Image in a Container so we are able to set the size.</p>
+<p><code>lib/main.dart</code></p>
+<pre><code>class MovieCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Card(
+        elevation: 5,
+        child: Row(
+          children: &lt;Widget&gt;[
+            Container(
+              height: 180,
+              child: Image.network(&#39;https://image.tmdb.org/t/p/w500/yJdeWaVXa2se9agI6B4mQunVYkB.jpg&#39;)
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}</code></pre>
+<p>Now the screen should look like this:</p>
+<p class="image-container"><img style="width: 292.64px" src="img\a20575e2157834ae.png"></p>
+<p>Next, you will add the description part.</p>
+<h2 is-upgraded><strong>Add title and description to Card</strong></h2>
+<p>The text component of the card consists of column of title and the description. We will also use SizedBox widget to quickly create some space between the title and description. This is easier than using padding in some cases.</p>
+<pre><code>class MovieCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Card(
+        elevation: 5,
+        child: Row(
+          children: &lt;Widget&gt;[
+            Container(
+              height: 180,
+              child: Image.network(&#39;https://image.tmdb.org/t/p/w500/yJdeWaVXa2se9agI6B4mQunVYkB.jpg&#39;)
+            ),
+            Expanded(                  // Add from this line
+              child: Container(
+                height: 180,
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: &lt;Widget&gt;[
+                    Text(&#39;Ip Man 4: The Finale&#39;,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold
+                      )
+                    ),
+                    SizedBox(height: 10),
+                    Expanded(child: Text(&#39;Following the death of his wife, Ip Man travels to San Francisco to ease tensions between the local kung fu masters and his star student, Bruce Lee, while searching for a better future for his son.&#39;))
+                  ],
+                ),
+              ),
+            )               // To this line
+          ],
+        ),
+      ),
+    );
+  }
+}</code></pre>
+<p><strong>Observation:</strong></p>
+<ul>
+<li>Expanded widget is used to prevent the text from overflowing</li>
+<li>Container is still used to set the size</li>
+<li>Column, or Row can be aligned using mainAxisAlignment and crossAxisAlignment. In here crossAxisAlignment is used to align the text/column to the left (start).</li>
+<li>Image.network() can be used to display Image from an URL</li>
+</ul>
+<p>The resulting app should look like this:</p>
+<p class="image-container"><img style="width: 252.84px" src="img\1bf2b1c677401bbf.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Create list of movies" duration="9">
+        <p>In this section, we will now fetch the data from the TMDB API instead of hardcoding it and show it using ListView widget</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Use Movie Card as button" duration="5">
+        
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Congratulations" duration="0">
+        <p>Congratulations, you&#39;ve successfully built your Movie App with Flutter! </p>
+<h2 is-upgraded><strong>What&#39;s next?</strong></h2>
+<p>Check out some of these codelabs...</p>
+<ul>
+<li><a href="https://codelabs.developers.google.com/codelabs/push-notifications/index.html" target="_blank">Adding Push Notifications to a Web App</a></li>
+<li><a href="https://codelabs.developers.google.com/codelabs/debugging-service-workers/index.html" target="_blank">Debugging Service Workers</a></li>
+<li><a href="https://codelabs.developers.google.com/codelabs/workbox-lab/index.html" target="_blank">Build a PWA using Workbox</a></li>
+</ul>
+<h2 is-upgraded><strong>Further reading</strong></h2>
+<ul>
+<li><a href="https://developers.google.com/web/fundamentals/primers/service-workers/high-performance-loading" target="_blank">High-performance service worker loading</a></li>
+<li><a href="https://medium.com/dev-channel/service-worker-caching-strategies-based-on-request-types-57411dd7652c" target="_blank">Service Worker Caching Strategies Based on Request Types</a></li>
+</ul>
+<h2 is-upgraded><strong>Reference docs</strong></h2>
+<ul>
+<li><a href="https://developers.google.com/web/fundamentals/web-app-manifest" target="_blank">Web App Manifest docs</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/Manifest#Members" target="_blank">Web App Manifest properties (MDN)</a></li>
+<li><a href="https://developers.google.com/web/fundamentals/app-install-banners/" target="_blank">Install &amp; Add to Home Screen</a></li>
+<li><a href="https://developers.google.com/web/fundamentals/primers/service-workers/" target="_blank">Service Worker Overview</a></li>
+<li><a href="https://developers.google.com/web/fundamentals/primers/service-workers/lifecycle" target="_blank">Service Worker Lifecycle</a></li>
+<li><a href="https://developers.google.com/web/fundamentals/primers/service-workers/high-performance-loading" target="_blank">High-performance service worker loading</a></li>
+<li><a href="https://developers.google.com/web/fundamentals/instant-and-offline/offline-cookbook/#generic-fallback" target="_blank">Offline Cookbook</a></li>
+</ul>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/prettify.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/codelab-elements.js"></script>
+
+</body>
+</html>
