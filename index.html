@@ -392,39 +392,1050 @@ class MovieCard extends StatelessWidget {     //Add from this line
     
       <google-codelab-step label="Create list of movies" duration="9">
         <p>In this section, we will now fetch the data from the TMDB API instead of hardcoding it and show it using ListView widget</p>
+<h2 is-upgraded><strong>Using ListView widget</strong></h2>
+<p>ListView widget is the widget that you can use to show a list. It requires 2 properties that you need to give `itemCount` and `itemBuilder`. `itemBuilder` property expects a function that will be run x times based on the value of itemCount. So if `itemCount` is set to 5, the ListView will run the `itemBuilder` function 5 times.</p>
+<p>Expanded widget is a similar widget to Container, however instead of needing us to specify the size, it will fill the rest of the empty space available. Hence, the ListView will be allocated the space from just below the ‘Discovery&#39; text until the end of the screen. Alternatively, you can also use Container widget with the height set instead of Expanded widget.</p>
+<p><code>lib/main.dart</code></p>
+<pre><code>class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: &#39;Movies&#39;,
+      home: Scaffold(
+          appBar: AppBar(
+            title: const Text(&#39;Movies&#39;),
+          ),
+          body: Column(
+            children: &lt;Widget&gt;[
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Text(&#34;Discover&#34;,
+                    style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold
+                    )
+                ),
+              ),
+              Expanded(      // Edit this line
+                child: ListView.builder(
+                    itemCount: 6,
+                    itemBuilder: (context, i) =&gt; MovieCard()),
+              ),     // Until this line
+            ],
+          )
+      ),
+    );
+  }
+}</code></pre>
+<p>Result will be :</p>
+<p class="image-container"><img style="width: 253.45px" src="img\f39cd551e105eb3e.png"></p>
+<h2 is-upgraded><strong>Fetch Data</strong></h2>
+<p>Add the following code at the end of your code, this will get the data from TMDB.</p>
+<p><code>lib/main.dart</code></p>
+<pre><code>Future&lt;Map&gt; getJson() async {
+  var url =
+      &#39;http://api.themoviedb.org/3/discover/movie?api_key=20a3f47c1f9a22b518bf93d335169cca&#39;;
+  http.Response response = await http.get(url);
+  return json.decode(response.body);
+}</code></pre>
+<p>Adding the code will give you an error as it require you to have http package. To add the http package, you need to edit the `pubspec.yaml` and add `http:` under dependencies.</p>
+<p>You need to add the http package:</p>
+<p><code>pubspec.yaml</code></p>
+<pre><code>dependencies:
+  flutter:
+    sdk: flutter
+  http:     //Add this line</code></pre>
+<p>Then, press the `Packages get` button that appeared to install the required package.</p>
+<p>Afterwards add these imports on the top of you `main.dart` file.</p>
+<p><code>lib/main.dart</code></p>
+<pre><code>import &#39;dart:async&#39;;
+import &#39;dart:convert&#39;;
+import &#39;package:http/http.dart&#39; as http;</code></pre>
+<p>You should not get an error after this.</p>
+<h2 is-upgraded><strong>Create Stateful Widget for MovieList</strong></h2>
+<p>As now we are fetching data from the internet. The movies data are not constant anymore, since at the start the movies  is empty until the moment the app finished get the data from TMDB. </p>
+<p>Type `stful` on your code and press enter. It will generate the code required to create a Stateful Widget. Name the widget `MovieList`.</p>
+<p>After typing `stful` you should get a code like this:</p>
+<p><code>lib/main.dart</code></p>
+<pre><code>class MovieList extends StatefulWidget {
+  @override
+  _MovieListState createState() =&gt; _MovieListState();
+}
+
+class _MovieListState extends State&lt;MovieList&gt; {
+  @override
+  Widget build(BuildContext context) {
+    return Container();          //Replace this with the Expanded ListView on MyApp
+  }
+}</code></pre>
+<p>Then copy paste the ListView builder with the expanded as well into the Container in _MovieListState</p>
+<p>You should get the following code:</p>
+<p><code>lib/main.dart</code></p>
+<pre><code>class MovieList extends StatefulWidget {
+
+  @override
+  _MovieListState createState() =&gt; _MovieListState();
+}
+
+class _MovieListState extends State&lt;MovieList&gt; {
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(         //Replaced the previous Container
+      child: ListView.builder(
+          itemCount: 6,
+          itemBuilder: (context, i) =&gt; MovieCard()),
+    );
+  }
+}</code></pre>
+<p>So now we have modularized/refactored the ListView code into our new MovieList Widget</p>
+<p>Then, we can replace the Expanded(ListView) part with the MovieList widget.</p>
+<p>Now our MyApp widget should look like this:</p>
+<p><code>lib/main.dart</code></p>
+<pre><code>class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: &#39;Movies&#39;,
+      home: Scaffold(
+          appBar: AppBar(
+            title: const Text(&#39;Movies&#39;),
+          ),
+          body: Column(
+            children: &lt;Widget&gt;[
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Text(&#34;Discover&#34;,
+                    style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold
+                    )
+                ),
+              ),
+              MovieList(),                 // Add this
+//              Expanded(                  // Remove this
+//                child: ListView.builder(
+//                    itemCount: 6,
+//                    itemBuilder: (context, i) =&gt; MovieCard()),
+//              ),
+            ],
+          )
+      ),
+    );
+  }
+}</code></pre>
+<p>Our app now should still look like previou one but we are using stateful widget this time.</p>
+<p class="image-container"><img style="width: 275.39px" src="img\88b4f72a6f3803d1.png"></p>
+<p>Now we want to show the movies data from the TMDB, so we create a `movies` variable so we can store the movies data that we get. And MovieList widget can access the data through the variable.</p>
+<p><code>lib/main.dart</code></p>
+<pre><code>class _MovieListState extends State&lt;MovieList&gt; {
+  var movies;     // Add this
+
+  void getData() async {      //Add this function
+    var data = await getJson();
+    setState(() {
+      movies = data[&#39;results&#39;];
+    });
+  }                          //Until here
+
+  @override
+  Widget build(BuildContext context) {
+    getData();                           // Dont forget to call the function here, so it run the fetching code
+    return Expanded(
+      child: ListView.builder(
+          itemCount: 6,
+          itemBuilder: (context, i) =&gt; MovieCard()),
+    );
+  }
+}</code></pre>
+<p>Change your MovieCard to receive a parameter which will be the movie data</p>
+<p><code>lib/main.dart</code></p>
+<pre><code>class MovieCard extends StatelessWidget {
+  final movie;  // Add this 
+  MovieCard(this.movie); // Add this
+// the rest of the code</code></pre>
+<p>Then edit your itemBuilder and ItemCount  property in your ListView Widget.</p>
+<p><code>lib/main.dart</code></p>
+<pre><code>class _MovieListState extends State&lt;MovieList&gt; {
+  var movies;     // Add this
+
+  Future&lt;void&gt; getData() async {      //Add this function
+    try {
+      var data = await getJson();
+      setState(() {
+        movies = data[&#39;results&#39;];
+      });
+    }
+    catch (error) { print(error);}
+  }                          //Until here
+
+  @override
+  Widget build(BuildContext context) {
+    getData();
+    return Expanded(
+      child: ListView.builder(
+          itemCount: movies == null ? 0 : movies.length,      // Edit this
+          itemBuilder: (context, i) =&gt; MovieCard(movies[i])),   //Edit this
+    );
+  }
+}</code></pre>
+<p>Then change your MovieCard title, image, and and description to use the `movie` variable.</p>
+<p><code>lib/main.dart</code></p>
+<pre><code>class MovieCard extends StatelessWidget {
+  final movie;
+  MovieCard(this.movie);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Card(
+        elevation: 5,
+        child: Row(
+          children: &lt;Widget&gt;[
+            Container(
+                height: 180,
+                child: Image.network(&#34;https://image.tmdb.org/t/p/w500/${movie[‘poster_path&#39;]}&#34;)    // Edit this
+            ),
+            Expanded(
+              child: Container(
+                height: 180,
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: &lt;Widget&gt;[
+                    Text(movie[&#39;title&#39;],     // Edit this
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold
+                        )
+                    ),
+                    SizedBox(height: 10),
+                    Expanded(child: Text(movie[&#39;overview&#39;]))   // Edit this
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}</code></pre>
+<p>The final result should be</p>
+<p>:<img style="width: 333.91px" src="img\5a8ff7608105740.png"></p>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="Use Movie Card as button" duration="5">
-        
+        <h2 is-upgraded><strong>InkWell Widget</strong></h2>
+<p>Flutter provides a lot of widgets that have a button&#39;s functionalities such as FlatButton,  RaisedButton, GestureDetector and many others. Most of these Widgets have something in common, which is the `onPressed ` or `onTap` properties where you can specify the function that will be run when you click/tap on the button.</p>
+<p>However, we will be using the InkWell widget for our app. The unique thing about InkWell is that they will show a ripple effect when you pressed the button.</p>
+<p>In MovieCard class, wrap the Row widget just inside the Card widget with an InkWell widget.</p>
+<aside class="special"><p><strong>Tip</strong>: In Android Studio, click on the Row widget, and press the yellow light bulb icon that will appear near the code. Select `Wrap with widget` option to quickly wrap your widget, then type ‘InkWell&#39; and press enter.</p>
+</aside>
+<p><code>lib/main.dart</code></p>
+<pre><code>class MovieCard extends StatelessWidget {
+  final movie;  // Add this
+  MovieCard(this.movie); // Add this
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Card(
+        elevation: 5,
+        child: InkWell(          //Wrapped Row with InkWell
+          onTap: () {},          //Add this as well
+          child: Row(
+            children: &lt;Widget&gt;[
+              Container(
+                  height: 180,
+                  child: Image.network(&#39;https://image.tmdb.org/t/p/w500/${movie[&#39;poster_path&#39;]}&#39;)
+              ),
+              Expanded(
+                child: Ink(
+                  height: 180,
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: &lt;Widget&gt;[
+                      Text(movie[&#39;title&#39;],
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold
+                          )
+                      ),
+                      SizedBox(height: 10),
+                      Expanded(child: Text(movie[&#39;overview&#39;]))
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}</code></pre>
+<p><strong>Observation:</strong></p>
+<ul>
+<li>InkWell widget requires the `onTap` property, for now we just give an empty function. </li>
+<li>We put InkWell inside the Card to instead of outside to show the ripple effect on the content of the Card. If we wrap the Card in InkWell instead, the ripple will show outside the Card.</li>
+</ul>
+<p>The MovieCard should be clickable after the changes:</p>
+<p class="image-container"><img style="width: 252.08px" src="img\bc94ccc9c7ca868f.gif"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Managing Screens" duration="0">
+        <p>In this section we will learn how to navigate between different screens.</p>
+<h2 is-upgraded><strong>Modularizing code for screens</strong></h2>
+<p>When we have multiple screens for the app, the best practice is to separate each screen into different files to make managing it easier.</p>
+<p>Create a folder inside `lib` and name it `screens`. This is where we will put all our screens file.</p>
+<h3 is-upgraded><strong>Create a Home screen</strong></h3>
+<ul>
+<li>Create a new dart file `home.dart` then move all the code except MyApp class with its material widget from `main.dart`.</li>
+<li>Copy all the imports from `main.dart` to `home.dart`.</li>
+<li>Create a stateless widget named Home in `home.dart`.</li>
+</ul>
+<aside class="special"><p><strong>Tip: </strong>Type ‘stless&#39; for a shortcut to generate stateless widget.</p>
+</aside>
+<p><code>lib/screens/home.dart</code></p>
+<pre><code>import &#39;package:flutter/material.dart&#39;;
+import &#39;dart:async&#39;;
+import &#39;dart:convert&#39;;
+import &#39;package:http/http.dart&#39; as http;
+
+class Home extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}</code></pre>
+<h3 is-upgraded><strong>Move Movie List to  Home screen</strong></h3>
+<ul>
+<li>Replace the Container widget in `home.dart` with the Scaffold widget and its content in `main.dart`</li>
+<li>Move all the other code except the MyApp widget and main function from `main.dart` to `home.dart`</li>
+<li>Import the the `home.dart` file into `main.dart`</li>
+<li>Replace Scaffold in MaterialApp inside `main.dart` to Home widget</li>
+</ul>
+<p>The final code should look like these:</p>
+<p><code>lib/main.dart</code></p>
+<pre><code>import &#39;package:flutter/material.dart&#39;;
+// Remove the unused import as we moved the getJson function to other file
+
+//import &#39;dart:async&#39;;
+//import &#39;dart:convert&#39;;
+//import &#39;package:http/http.dart&#39; as http;
+
+import &#39;screens/home.dart&#39;;       // Import home.dart
+
+void main() =&gt; runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: &#39;Movies&#39;,
+      home: Home()           // Replaced Scaffold with the imported home.dart
+    );
+  }
+}</code></pre>
+<p><code>lib/screens/home.dart</code></p>
+<pre><code>import &#39;package:flutter/material.dart&#39;;
+import &#39;dart:async&#39;;
+import &#39;dart:convert&#39;;
+import &#39;package:http/http.dart&#39; as http;
+
+class Home extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(                     // Replaced Container with Scaffold copied from main.dart
+        appBar: AppBar(
+          title: const Text(&#39;Movies&#39;),
+        ),
+        body: Column(
+          children: &lt;Widget&gt;[
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Text(&#34;Discover&#34;,
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold
+                  )
+              ),
+            ),
+            MovieList(),                 // Add this
+          ],
+        )
+    );
+  }
+}
+
+// Added code
+
+class MovieList extends StatefulWidget {
+
+  @override
+  _MovieListState createState() =&gt; _MovieListState();
+}
+
+class _MovieListState extends State&lt;MovieList&gt; {
+  var movies;     // Add this
+
+  Future&lt;void&gt; getData() async {      //Add this function
+    try {
+      var data = await getJson();
+      setState(() {
+        movies = data[&#39;results&#39;];
+      });
+    }
+    catch (error) { print(error);}
+  }                          //Until here
+
+  @override
+  Widget build(BuildContext context) {
+    getData();
+    return Expanded(
+      child: ListView.builder(
+          itemCount: movies == null ? 0 : movies.length,      // Edit this
+          itemBuilder: (context, i) =&gt; MovieCard(movies[i])),   //Edit this
+    );
+  }
+}
+
+
+class MovieCard extends StatelessWidget {
+  final movie;  // Add this
+  MovieCard(this.movie); // Add this
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Card(
+        elevation: 5,
+        child: InkWell(
+          onTap: () {},
+          child: Row(
+            children: &lt;Widget&gt;[
+              Container(
+                  height: 180,
+                  child: Image.network(&#39;https://image.tmdb.org/t/p/w500/${movie[&#39;poster_path&#39;]}&#39;)
+              ),
+              Expanded(
+                child: Ink(
+                  height: 180,
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: &lt;Widget&gt;[
+                      Text(movie[&#39;title&#39;],
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold
+                          )
+                      ),
+                      SizedBox(height: 10),
+                      Expanded(child: Text(movie[&#39;overview&#39;]))
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+Future&lt;Map&gt; getJson() async {
+  var url =
+      &#39;http://api.themoviedb.org/3/discover/movie?api_key=20a3f47c1f9a22b518bf93d335169cca&#39;;
+  http.Response response = await http.get(url);
+  return json.decode(response.body);
+}</code></pre>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Creating Detail screen" duration="0">
+        <p>In this section, we will create a new screen where we show a detailed info of the movie selected.</p>
+<p>Preview of the detail screen:</p>
+<p class="image-container"><img style="width: 237.75px" src="img\2908832adf584098.png"></p>
+<h2 is-upgraded><strong>Plan the layout</strong></h2>
+<p>From the image we can plan how we want to layout the app to achieve the desired look.</p>
+<p>We can see the screen is based on column, a poster, title, the 3 boxes and finally the description.</p>
+<p>Hence our widget tree will look similar to this:<br></p>
+<p>Column<br>----Poster<br>----Title<br>----Row<br>--------Duration<br>--------Year<br>--------Rating<br>----Description</p>
+<h2 is-upgraded><strong>Create Detail screen</strong></h2>
+<ul>
+<li>Create new dart file `detail.dart` inside screens folder.</li>
+<li>Create the Detail stateless widget</li>
+</ul>
+<p><code>lib/screens/detail.dart</code></p>
+<pre><code>import &#39;package:flutter/material.dart&#39;;
+
+class Detail extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}</code></pre>
+<p>Replace the container with Scaffold and add an App Bar. Use Column as the body.</p>
+<p><code>lib/screens/detail.dart</code></p>
+<pre><code>import &#39;package:flutter/material.dart&#39;;
+
+class Detail extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(&#39;Movie Title&#39;)
+      ),
+      body: Column()
+    );
+  }
+}
+</code></pre>
+<p>However, after you will notice that the app is still showing the home screen. So how do we show our Detail screen?</p>
+<ul>
+<li>Import the detail screen in `main.dart`</li>
+<li>Replace the Home widget inside MaterialApp to the imported Detail widget</li>
+</ul>
+<p><code>lib/screens/main.dart</code></p>
+<pre><code>class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: &#39;Movies&#39;,
+      home: Detail()           // Replaced Home with the imported detail.dart
+    );
+  }
+}
+</code></pre>
+<p>Now our app should display the our newly created Detail screen.</p>
+<p class="image-container"><img style="width: 222.68px" src="img\94faf094a8a6da8.png"></p>
+<h2 is-upgraded><strong>Add Poster Image</strong></h2>
+<p>Add Image widget inside the Column, wrap it with Container to set the height, and wrap it again with Center to center the widget.</p>
+<p><code>lib/screens/detail.dart</code></p>
+<pre><code>class Detail extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(&#39;Movie Title&#39;)
+      ),
+      body: Column(
+        children: &lt;Widget&gt;[
+          Center(               // Added from this line
+            child: Container(
+              height: 400,
+              margin: EdgeInsets.all(40),
+              child: Image.network(&#39;https://image.tmdb.org/t/p/w500/yJdeWaVXa2se9agI6B4mQunVYkB.jpg&#39;)
+            ),
+          ),
+        ]
+      )
+    );
+  }
+}</code></pre>
+<p>Now the movie poster will show up on the app.</p>
+<p class="image-container"><img style="width: 280.93px" src="img\4affd395b85208a7.png"></p>
+<h2 is-upgraded><strong>Add Movie Title</strong></h2>
+<p>Next, just add Text widget below the poster image, and stylize it accordingly.</p>
+<p><code>lib/screens/detail.dart</code></p>
+<pre><code>class Detail extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(&#39;Movie Title&#39;)
+      ),
+      body: Column(
+        children: &lt;Widget&gt;[
+          Center(
+            child: Container(
+              height: 400,
+              margin: EdgeInsets.fromLTRB(20, 40, 20, 20),
+              child: Image.network(&#39;https://image.tmdb.org/t/p/w500/yJdeWaVXa2se9agI6B4mQunVYkB.jpg&#39;)
+            ),
+          ),
+          Text(&#34;Ip Man 4 The Finale&#34;,    // Add Movie title
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 24
+            ),
+          )
+        ]
+      )
+    );
+  }
+}</code></pre>
+<p><br>The app should look like this now:</p>
+<p class="image-container"><img style="width: 223.69px" src="img\b528042758a3f5eb.png"></p>
+<h2 is-upgraded><strong>Adding Info Box</strong></h2>
+<p>Next, we will create the three boxes showing the movie duration, year, and rating. However, we can see that the boxes have the same structure. Hence, instead of repeating the code 3 times, we can create a new InfoCard widget that we can reuse.</p>
+<p>Create a new stateless widget named InfoCard that receives a string parameter to be shown as the inside the card.</p>
+<p><code>lib/screens/detail.dart</code></p>
+<pre><code>class InfoCard extends StatelessWidget {
+  String text = &#34;&#34;;
+  InfoCard(this.text);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 4,
+      child: Container(
+        height: 80,
+        width: 80,
+        padding: EdgeInsets.all(10),
+          child: Column(
+            children: &lt;Widget&gt;[
+              Text(text),
+            ],
+          )
+      )
+    );
+  }
+}</code></pre>
+<p>Then add the InfoCard widget below the Movie Title to see what the widget look like.</p>
+<p><code>lib/screens/detail.dart</code></p>
+<pre><code>class Detail extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(&#39;Movie Title&#39;)
+      ),
+      body: Column(
+        children: &lt;Widget&gt;[
+          Center(
+            child: Container(
+              height: 400,
+              margin: EdgeInsets.fromLTRB(20, 40, 20, 20),
+              child: Image.network(&#39;https://image.tmdb.org/t/p/w500/yJdeWaVXa2se9agI6B4mQunVYkB.jpg&#39;)
+            ),
+          ),
+          Text(&#34;Ip Man 4 The Finale&#34;,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 24
+            ),
+          ),
+          InfoCard(&#34;Some Info&#34;)            // Added InfoCard
+        ]
+      )
+    );
+  }
+}</code></pre>
+<p>The app should look like this:</p>
+<p class="image-container"><img style="width: 200.88px" src="img\e744c3efddf934bc.png"></p>
+<h2 is-upgraded><strong>Adding Info Card with Icon</strong></h2>
+<p>Add an Icon on the InfoCard and also SizedBox to create some space between the icon and the text.</p>
+<p><code>lib/screens/detail.dart</code></p>
+<pre><code>class InfoCard extends StatelessWidget {
+  String text = &#34;&#34;;
+  InfoCard(this.text);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 4,
+      child: Container(
+        height: 80,
+        width: 80,
+        padding: EdgeInsets.all(10),
+          child: Column(
+            children: &lt;Widget&gt;[
+              Icon(Icons.timer,       // Added Icon
+                size: 35
+              ),
+              SizedBox(height: 5),    // Added SizeBox
+              Text(text),
+            ],
+          )
+      )
+    );
+  }
+}</code></pre>
+<p>Then the app will look like this:</p>
+<p class="image-container"><img style="width: 226.01px" src="img\46c551e0dc5a0d6b.png"></p>
+<p>However we do not want the icon for three boxes as the same, hence, we need to use the Icon as parameter instead of hardcoding it.</p>
+<ul>
+<li>Create a new variable icon for InfoCard class and edit its constructor function to receive an Icon as well.</li>
+</ul>
+<p><code>lib/screens/detail.dart</code></p>
+<pre><code>class InfoCard extends StatelessWidget {
+  String text = &#34;&#34;;
+  IconData icon;                      // Add this
+  InfoCard(this.text, this.icon);     // Edit this
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 4,
+      child: Container(
+        height: 80,
+        width: 80,
+        padding: EdgeInsets.all(10),
+          child: Column(
+            children: &lt;Widget&gt;[
+              Icon(icon,       // edit this
+                size: 35
+              ),
+              SizedBox(height: 5),
+              Text(text),
+            ],
+          )
+      )
+    );
+  }
+}</code></pre>
+<p>Then do not forget to pass the new icon parameter to the InfoCard in Detail class.</p>
+<p><code>lib/screens/detail.dart</code></p>
+<pre><code>InfoCard(&#34;Hello&#34;, Icons.timer)</code></pre>
+<p>Now finally, wrap the InfoCard in Row, and create the three boxes according to its icon and text. Additionally add a SizedBox between the Title and the info boxes.</p>
+<p><code>lib/screens/detail.dart</code></p>
+<pre><code>class Detail extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(&#39;Movie Title&#39;)
+      ),
+      body: Column(
+        children: &lt;Widget&gt;[
+          Center(
+            child: Container(
+              height: 400,
+              margin: EdgeInsets.fromLTRB(20, 40, 20, 20),
+              child: Image.network(&#39;https://image.tmdb.org/t/p/w500/yJdeWaVXa2se9agI6B4mQunVYkB.jpg&#39;)
+            ),
+          ),
+          Text(&#34;Ip Man 4 The Finale&#34;,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 24
+            ),
+          ),
+          SizedBox(               // Added SizedBox
+            height: 20,
+          ),
+          Row(         // Edited this line
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: &lt;Widget&gt;[
+              InfoCard(&#39;124 min&#39;, Icons.timer),
+              InfoCard(&#39;2018&#39;, Icons.calendar_today),
+              InfoCard(&#39;8.4/10&#39;, Icons.star)
+            ],
+          )
+        ]
+      )
+    );
+  }
+}</code></pre>
+<p>Now your app will look like this:</p>
+<p class="image-container"><img style="width: 217.50px" src="img\62a5cc75cf8fdd2e.png"></p>
+<h2 is-upgraded><strong>Add Movie Description</strong></h2>
+<p>Next we will at the movie description at the bottom.</p>
+<p><code>lib/screens/detail.dart</code></p>
+<pre><code>class Detail extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(&#39;Movie Title&#39;)
+      ),
+      body: Column(
+        children: &lt;Widget&gt;[
+          Center(
+            child: Container(
+              height: 350,
+              margin: EdgeInsets.fromLTRB(20, 40, 20, 20),
+              child: Image.network(&#39;https://image.tmdb.org/t/p/w500/yJdeWaVXa2se9agI6B4mQunVYkB.jpg&#39;)
+            ),
+          ),
+          Text(&#34;Ip Man 4 The Finale&#34;,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 24
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: &lt;Widget&gt;[
+              InfoCard(&#39;124 min&#39;, Icons.timer),
+              InfoCard(&#39;2018&#39;, Icons.calendar_today),
+              InfoCard(&#39;8.4/10&#39;, Icons.star),
+            ],
+          ),
+          Padding(         // Added from this line
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40.0),
+            child: Text(&#39;Following the death of his wife, Ip Man travels to San Francisco to ease tensions between the local kung fu masters and his star student, Bruce Lee, while searching for a better future for his son.&#39;,
+              style: TextStyle(fontSize: 18)
+            ),
+          )
+        ]
+      )
+    );
+  }
+}</code></pre>
+<p>However, as you added the text, you will notice you will get an error because the text overflowed the screen. This is because flutter will not make your app scrollable automatically when your widget exceeds the screen height. To solve this, we need to use a scrolling widget which in this we will be using SingleChildScrollView widget.</p>
+<p>Wrap your Top most column with a SingleChildScrollView.</p>
+<p><code>lib/screens/detail.dart</code></p>
+<pre><code>class Detail extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(&#39;Movie Title&#39;)
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: &lt;Widget&gt;[
+            Center(
+              child: Container(
+                height: 350,
+                margin: EdgeInsets.fromLTRB(20, 40, 20, 20),
+                child: Image.network(&#39;https://image.tmdb.org/t/p/w500/yJdeWaVXa2se9agI6B4mQunVYkB.jpg&#39;)
+              ),
+            ),
+            Text(&#34;Ip Man 4 The Finale&#34;,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 24
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: &lt;Widget&gt;[
+                InfoCard(&#39;124 min&#39;, Icons.timer),
+                InfoCard(&#39;2018&#39;, Icons.calendar_today),
+                InfoCard(&#39;8.4/10&#39;, Icons.star),
+              ],
+            ),
+            Padding(    // Added from this line
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40.0),
+              child: Text(&#39;Following the death of his wife, Ip Man travels to San Francisco to ease tensions between the local kung fu masters and his star student, Bruce Lee, while searching for a better future for his son.&#39;,
+                style: TextStyle(fontSize: 18)
+              ),
+            )
+          ]
+        ),
+      )
+    );
+  }
+}</code></pre>
+<p>Now your detail screen should be scrollable:</p>
+<p class="image-container"><img style="width: 208.06px" src="img\52f50dba3924b6ff.gif"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Map and Routing" duration="0">
+        <p>In Flutter, screens or pages are usually called routes. To start navigating between screens, you need to define all the screens available by setting the routes property in MaterialApp.</p>
+<p>Add the Home and Detail routes to the MaterialApp in `main.dart`</p>
+<p><code>lib/main.dart</code></p>
+<pre><code>class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: &#39;Movies&#39;,
+      //home: Home(),              // Remove this
+      routes: {                    // Added routes
+        &#39;/&#39; : (context) =&gt; Home(),
+        &#39;/detail&#39;: (context) =&gt; Detail()
+      }
+    );
+  }
+}</code></pre>
+<p><strong>Observation</strong></p>
+<ul>
+<li>‘/&#39; route will be the default screen unless the ‘initialRoute&#39; is set</li>
+<li>`home` property should be removed if we set the ‘/&#39; route</li>
+<li>The route expects a function that receive the context and return the screen widget</li>
+</ul>
+<h2 is-upgraded><strong>Navigating to other screen</strong></h2>
+<p>To navigate to other screen, you just need to use the following code:</p>
+<p><code>Navigator.pushNamed(context, ‘/routeName&#39;)</code></p>
+<p>Now, we can implement the pressed function in the movie list. If any of the movie cards are tapped, the app should navigate to the movie detail screen.</p>
+<p>Add the Navigation code on InkWell onTap property</p>
+<p><code>lib/screens/home.dart</code></p>
+<pre><code>class MovieCard extends StatelessWidget {
+  final movie;  // Add this
+  MovieCard(this.movie); // Add this
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Card(
+        elevation: 5,
+        child: InkWell(
+          onTap: () {
+            Navigator.pushNamed(context, &#39;/detail&#39;);      // Add this line
+          },
+          child: Row(
+            children: &lt;Widget&gt;[
+              Container(
+                  height: 180,
+                  child: Image.network(&#39;https://image.tmdb.org/t/p/w500/${movie[&#39;poster_path&#39;]}&#39;)
+              ),
+              Expanded(
+                child: Ink(
+                  height: 180,
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: &lt;Widget&gt;[
+                      Text(movie[&#39;title&#39;],
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold
+                          )
+                      ),
+                      SizedBox(height: 10),
+                      Expanded(child: Text(movie[&#39;overview&#39;]))
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}</code></pre>
+<p>Now, the app should look like this</p>
+<p class="image-container"><img style="width: 271.49px" src="img\a62cee0fa27ee535.gif"></p>
+<p>However, notice that the Movie data on detail screen are hardcoded and not following the tapped movie.</p>
+<h2 is-upgraded><strong>Pass arguments to a named route</strong></h2>
+<p>The Navigator provides the ability to navigate to a named route from any part of an app using a common identifier. In some cases, you might also need to pass arguments to a named route. In our case, we want to navigate to the /detail route and pass information about the movie to that route.</p>
+<p>You can accomplish this task using the arguments parameter of the Navigator.pushNamed() method. Then extract the arguments using the ModalRoute.of() method inside the widget where we navigated to.</p>
+<p>Pass the movie data as arguments when navigating</p>
+<p>lib/screens/home.dart</p>
+<pre><code>class MovieCard extends StatelessWidget {
+  final movie;  // Add this
+  MovieCard(this.movie); // Add this
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Card(
+        elevation: 5,
+        child: InkWell(
+          onTap: () {
+            Navigator.pushNamed(context, &#39;/detail&#39;, arguments: {       // Edit this line
+              &#39;movie&#39;: movie
+            });
+          },
+          child: Row(
+            children: &lt;Widget&gt;[
+              Container(
+                  height: 180,
+                  child: Image.network(&#39;https://image.tmdb.org/t/p/w500/${movie[&#39;poster_path&#39;]}&#39;)
+              ),
+              Expanded(
+                child: Ink(
+                  height: 180,
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: &lt;Widget&gt;[
+                      Text(movie[&#39;title&#39;],
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold
+                          )
+                      ),
+                      SizedBox(height: 10),
+                      Expanded(child: Text(movie[&#39;overview&#39;]))
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}</code></pre>
+<p>Next, we need to extract the data on the next screen then replace the hardcoded value with the extracted movie data.</p>
+<p><code>lib/screens/detail.dart</code></p>
+<pre><code>class Detail extends StatelessWidget {
+  var movie;              // Added movie variable
+
+  @override
+  Widget build(BuildContext context) {
+    Map data = ModalRoute.of(context).settings.arguments;  // Added this line
+    movie = data[&#39;movie&#39;];     // Added this line
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(&#39;Movie Title&#39;)        // Edited this line
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: &lt;Widget&gt;[
+            Center(
+              child: Container(
+                height: 350,
+                margin: EdgeInsets.fromLTRB(20, 40, 20, 20),
+                child: Image.network(&#34;https://image.tmdb.org/t/p/w500/${movie[&#39;poster_path&#39;]}&#34;)         // Edited this line
+              ),
+            ),
+            Text(movie[&#39;title&#39;],          // Edited this line
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 24
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: &lt;Widget&gt;[
+                InfoCard(&#39;~ min&#39;, Icons.timer),    // Edited
+                InfoCard(movie[&#39;release_date&#39;].substring(0, 4), Icons.calendar_today),   // Edited
+                InfoCard(&#39;${movie[&#39;vote_average&#39;]}/10&#39;, Icons.star),   // Edited
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40.0),
+              child: Text(movie[&#39;overview&#39;],    // Edited
+                style: TextStyle(fontSize: 18)
+              ),
+            )
+          ]
+        ),
+      )
+    );
+  }
+}</code></pre>
+<p>Now your app should load the movie detail based on the one you selected.</p>
+<p class="image-container"><img style="width: 334.50px" src="img\813333726db98cc1.gif"></p>
+
 
       </google-codelab-step>
     
       <google-codelab-step label="Congratulations" duration="0">
-        <p>Congratulations, you&#39;ve successfully built your Movie App with Flutter! </p>
-<h2 is-upgraded><strong>What&#39;s next?</strong></h2>
-<p>Check out some of these codelabs...</p>
-<ul>
-<li><a href="https://codelabs.developers.google.com/codelabs/push-notifications/index.html" target="_blank">Adding Push Notifications to a Web App</a></li>
-<li><a href="https://codelabs.developers.google.com/codelabs/debugging-service-workers/index.html" target="_blank">Debugging Service Workers</a></li>
-<li><a href="https://codelabs.developers.google.com/codelabs/workbox-lab/index.html" target="_blank">Build a PWA using Workbox</a></li>
-</ul>
-<h2 is-upgraded><strong>Further reading</strong></h2>
-<ul>
-<li><a href="https://developers.google.com/web/fundamentals/primers/service-workers/high-performance-loading" target="_blank">High-performance service worker loading</a></li>
-<li><a href="https://medium.com/dev-channel/service-worker-caching-strategies-based-on-request-types-57411dd7652c" target="_blank">Service Worker Caching Strategies Based on Request Types</a></li>
-</ul>
-<h2 is-upgraded><strong>Reference docs</strong></h2>
-<ul>
-<li><a href="https://developers.google.com/web/fundamentals/web-app-manifest" target="_blank">Web App Manifest docs</a></li>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/Manifest#Members" target="_blank">Web App Manifest properties (MDN)</a></li>
-<li><a href="https://developers.google.com/web/fundamentals/app-install-banners/" target="_blank">Install &amp; Add to Home Screen</a></li>
-<li><a href="https://developers.google.com/web/fundamentals/primers/service-workers/" target="_blank">Service Worker Overview</a></li>
-<li><a href="https://developers.google.com/web/fundamentals/primers/service-workers/lifecycle" target="_blank">Service Worker Lifecycle</a></li>
-<li><a href="https://developers.google.com/web/fundamentals/primers/service-workers/high-performance-loading" target="_blank">High-performance service worker loading</a></li>
-<li><a href="https://developers.google.com/web/fundamentals/instant-and-offline/offline-cookbook/#generic-fallback" target="_blank">Offline Cookbook</a></li>
-</ul>
+        <p>Congratulations, you have successfully built a Movie App with Flutter! </p>
+<p class="image-container"><img style="width: 328.77px" src="img\813333726db98cc1.gif"></p>
 
 
       </google-codelab-step>
