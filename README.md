@@ -9,11 +9,9 @@
   <p align="center">
     Flutter Movie Codelab
     <br />
-    <a href="https://github.com/mfrashad/flutter-movie-codelab"><strong>Explore the docs »</strong></a>
+    <a href="https://www.mfrashad.com/flutter-movie-codelab"><strong>View Codelab »</strong></a>
     <br />
     <br />
-    <a href="https://www.mfrashad.com/flutter-movie-codelab">View CodeLab</a>
-    ·
     <a href="https://github.com/mfrashad/flutter-movie-codelab/issues">Report Bug</a>
     ·
     <a href="https://github.com/mfrashad/flutter-movie-codelab/issues">Request Feature</a>
