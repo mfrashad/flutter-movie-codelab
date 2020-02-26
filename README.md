@@ -1,7 +1,7 @@
 <br />
 <p align="center">
   <a href="https://www.mfrashad.com/flutter-movie-codelab">
-    <img src="/codelab-preview.png" alt="Logo" width="600">
+    <img src="/codelab-preview.PNG" alt="Logo" width="600">
   </a>
 
   <h3 align="center">Flutter Movie Codelab</h3>
@@ -31,7 +31,7 @@ In this codelab, you're going to build a simple movie app using Flutter and TMDB
 
 The following image shows the resulting app of this codelab:
 
-<img src="/pass-param.gif" alt="App Preview" width="200">
+<img src="/passParam.gif" alt="App Preview" width="200">
 
 
 
