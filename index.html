@@ -21,22 +21,23 @@
 </head>
 <body>
   <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
-  <google-codelab codelab-gaid="UA-52746336-1"
+  <google-codelab codelab-gaid="UA-128948221-4"
                   id="flutter-movies-app"
                   title="Flutter Movies App"
                   environment="web"
-                  feedback-link="https://github.com/googlecodelabs/your-first-pwapp/issues">
+                  feedback-link="https://github.com/mfrashad/flutter-movie-codelab">
     
       <google-codelab-step label="Introduction" duration="0">
         <p><strong>Last Updated:</strong> 2020-02-21</p>
 <p><strong>Author: </strong><a href="https://www.mfrashad.com/" target="_blank">Muhammad Fathy Rashad</a></p>
+<p><strong>Credit and References: </strong><a href="https://codelabs.developers.google.com/codelabs/first-flutter-app-pt1/#0" target="_blank">Write your first flutter app</a>, <a href="https://github.com/itzpradip/flutter-movie-app" target="_blank">Flutter Movie App</a></p>
 <h2 is-upgraded><strong>What is Flutter?</strong></h2>
 <p>Flutter is Google&#39;s UI toolkit for building beautiful, natively compiled applications for mobile, web, and desktop from a single codebase. Flutter works with existing code, is used by developers and organizations around the world, and is free and open source.</p>
 <p>In this codelab, you&#39;ll create a simple mobile Flutter app. If you&#39;re familiar with object-oriented code and basic programming concepts—such as variables, loops, and conditionals—then you can complete the codelab. You don&#39;t need previous experience with Dart or mobile programming.</p>
 <h2 is-upgraded><strong>What you&#39;ll build</strong></h2>
 <p>In this codelab, you&#39;re going to build a simple movie app using Flutter and TMDB API. Your app will fetch the data of several movies from TMDB, and show it in a beautiful list on the app.</p>
 <p>The following image shows the resulting app of this codelab:</p>
-<p class="image-container"><img style="width: 173.54px" src="img\329a5f253d67cc01.png"></p>
+<p class="image-container"><img style="width: 181.50px" src="img\813333726db98cc1.gif"></p>
 <h2 class="checklist" is-upgraded><strong>What you&#39;ll learn</strong></h2>
 <ul class="checklist">
 <li>How to create a flutter app</li>
@@ -44,7 +45,6 @@
 <li>How to display a list</li>
 <li>How to fetch data from an API in flutter.</li>
 </ul>
-<p>This codelab is focused on Progressive Web Apps. Non-relevant concepts and code blocks are glossed over and are provided for you to simply copy and paste.</p>
 <h2 is-upgraded><strong>What you&#39;ll need</strong></h2>
 <ul>
 <li>Flutter SDK</li>
@@ -54,7 +54,7 @@
 
       </google-codelab-step>
     
-      <google-codelab-step label="Set up your Flutter environment" duration="2">
+      <google-codelab-step label="Set up your Flutter environment" duration="15">
         <p>You need two pieces of software—the <a href="https://flutter.io/get-started/install/" target="_blank">Flutter SDK</a> and <a href="https://flutter.io/get-started/editor/" target="_blank">an editor</a>. (The codelab assumes that you&#39;re using Android Studio, but you can use your preferred editor.)</p>
 <p>To install this you can follow the <a href="https://flutter.dev/docs/get-started/install" target="_blank">official installation guide</a> or you can use <a href="https://docs.google.com/document/d/16lCB3lQc_isiVk93uvhgM8fLASBE4E-w52C0FDXR8cQ/edit?usp=sharing" target="_blank">our own guide</a> (Windows only) for simpler setup with images or visual aid.</p>
 <p>You can run the codelab by using any of the following devices:</p>
@@ -64,11 +64,16 @@
 <li>The <a href="https://flutter.io/setup-macos/#set-up-the-android-emulator" target="_blank">Android Emulator</a> (requires setup in Android Studio)</li>
 <li>A browser (Chrome is required for debugging)</li>
 </ul>
+<p>If you want to compile your app to run on the web, you must enable this feature (which is currently in beta). To enable web support, use the following instructions:</p>
+<pre><code>$ flutter channel beta
+$ flutter upgrade
+$ flutter config --enable-web</code></pre>
+<p>You need only run the config command once. After enabling web support, every Flutter app you create also compiles for the web. In your IDE under the devices pulldown, or at the command line using flutter devices, you should now see Chrome and Web server listed. The Chrome device automatically starts Chrome. The Web server starts a server that hosts the app so that you can load it from any browser. Use the Chrome device during development so that you can use DevTools, and the web server when you want to test on other browsers. For more information, see <a href="https://flutter.dev/docs/get-started/web" target="_blank">Building a web application with Flutter</a> and <a href="https://flutter.dev/docs/get-started/codelab-web" target="_blank">Write your first Flutter app on the web</a>.</p>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Create the starter app" duration="2">
+      <google-codelab-step label="Create the starter app" duration="5">
         <p><img style="width: 24.00px" src="img\b2f84ff91b0e1396.png">Create a simple, templated Flutter app by using the instructions in <a href="https://flutter.dev/docs/get-started/test-drive#androidstudio" target="_blank">Create the app</a>. Enter startup_namer (instead of myapp) as the project name. You&#39;ll modify the starter app to create the finished app.</p>
 <p>Tip: If you don&#39;t see the ability to start a new Flutter project as an option in your IDE, then make sure that you have the <a href="https://flutter.io/get-started/editor/#androidstudio" target="_blank">plugins installed for Flutter and Dart</a>.</p>
 <p>You&#39;ll mostly edit lib/main.dart, where the Dart code lives.</p>
@@ -124,12 +129,13 @@ class MyApp extends StatelessWidget {
 
       </google-codelab-step>
     
-      <google-codelab-step label="Add and style text" duration="3">
+      <google-codelab-step label="Add and style text" duration="5">
         <h2 is-upgraded><strong>Plan the app layout</strong></h2>
 <p>Before we start coding anything, we should plan how we want to layout the screen to achieve our target look.</p>
-<p>From this image, you can infer how the widget tree looks like.</p>
+<p>From this image, you can infer what the widget tree looks like.</p>
+<p class="image-container"><img style="width: 431.78px" src="img\682564fcde9d0de1.png"></p>
 <h2 is-upgraded><strong>Add header text</strong></h2>
-<p>Replace the Scaffold body with a Column. Column have a children property where you can give a list of Widgets to it. Then, put a Text widget as our header inside the Column children.</p>
+<p>Replace the Scaffold body with a Column. Column widget has a children property where you can give a list of Widgets to it. Then, put a Text widget as our header inside the Column children.</p>
 <p><code>lib/main.dart</code></p>
 <pre><code>class MyApp extends StatelessWidget {
   @override
@@ -149,10 +155,10 @@ class MyApp extends StatelessWidget {
     );
   }
 }</code></pre>
-<p>After you changed this you will see the text shows on the screen. However it looks nothing like our desired look, which is why you will stylize it.</p>
+<p>After you change this you will see the text shows on the screen. However it looks nothing like our desired look, which is why you will stylize it.</p>
 <p class="image-container"><img style="width: 277.55px" src="img\7eea991f66435ebf.png"></p>
 <h2 is-upgraded><strong>Stylize text</strong></h2>
-<p>The Text widget have a style property, which expects a TextStyle widget. In TextStyle widget you can set the font size, weight, style and many others properties.</p>
+<p>The Text widget has a style property, which expects a TextStyle widget. In TextStyle widget you can set the font size, weight, style and many others properties.</p>
 <aside class="special"><p>Tip: In Android Studio, you can place your text cursor on a widget and press Ctrl+Q to view the available widget parameters</p>
 </aside>
 <p>We will increase the font size and bold it.</p>
@@ -220,7 +226,7 @@ class MyApp extends StatelessWidget {
 
       </google-codelab-step>
     
-      <google-codelab-step label="Create a movie card" duration="3">
+      <google-codelab-step label="Create a movie card" duration="15">
         <p>In this section we will create a movie card as shown in our final app image, but only one card and not a list of cards..</p>
 <h2 is-upgraded><strong>Add Card</strong></h2>
 <p>Flutter has a Card widget, which gives us a shadow effect. It has elevation properties which determine how heavy the shadow will be. However Card does not have a width or height property. So we add a Container widget inside the card to set its size.</p>
@@ -313,7 +319,7 @@ class MovieCard extends StatelessWidget {     //Add from this line
 <p>The resulting screen should have no changes from the previous one as we are not adding anything, but only improving our code to be better.</p>
 <p>Now you have your own MovieCard widget that can be easily reused. For example, you can add another MovieCard inside the column so that you will have 2 cards.</p>
 <h2 is-upgraded><strong>Add Image to the card</strong></h2>
-<p>Next, we will add the movie poster inside the card. Note that we will not put Image directly inside the card. Based on what we planned on the layout before, the card have two part: the movie poster and the movie description. Hence we need to use Row component. Additionally we will also wrap the Image in a Container so we are able to set the size.</p>
+<p>Next, we will add the movie poster inside the card. Note that we will not put Image directly inside the card. Based on what we planned on the layout before, the card has two parts: the movie poster and the movie description. Hence, we need to use Row widget. Additionally we will also wrap the Image in a Container so we are able to set the size.</p>
 <p><code>lib/main.dart</code></p>
 <pre><code>class MovieCard extends StatelessWidget {
   @override
@@ -390,7 +396,7 @@ class MovieCard extends StatelessWidget {     //Add from this line
 
       </google-codelab-step>
     
-      <google-codelab-step label="Create list of movies" duration="9">
+      <google-codelab-step label="Create list of movies" duration="20">
         <p>In this section, we will now fetch the data from the TMDB API instead of hardcoding it and show it using ListView widget</p>
 <h2 is-upgraded><strong>Using ListView widget</strong></h2>
 <p>ListView widget is the widget that you can use to show a list. It requires 2 properties that you need to give `itemCount` and `itemBuilder`. `itemBuilder` property expects a function that will be run x times based on the value of itemCount. So if `itemCount` is set to 5, the ListView will run the `itemBuilder` function 5 times.</p>
@@ -429,23 +435,27 @@ class MovieCard extends StatelessWidget {     //Add from this line
 }</code></pre>
 <p>Result will be :</p>
 <p class="image-container"><img style="width: 253.45px" src="img\f39cd551e105eb3e.png"></p>
+<h2 is-upgraded><strong>Get TMDB API key</strong></h2>
+<p>For the movie data, we will be getting it from TMDB as they provide a nice API for it. First we need to get an API key which is what TMDB uses to authorize API requests to their website.</p>
+<p><a href="https://www.themoviedb.org/" target="_blank">TMDB </a>required people to register to get an API key. Then, you can apply for an API key by clicking the &#34;API&#34; link from the left hand sidebar within your account settings page. TMDB will give you the API key immediately after you fill in the details. Feel free to read their<a href="https://www.themoviedb.org/faq/api" target="_blank"> FAQ page</a> for more info.</p>
 <h2 is-upgraded><strong>Fetch Data</strong></h2>
-<p>Add the following code at the end of your code, this will get the data from TMDB.</p>
+<p>Add the following code at the end of your code, this will get the data from TMDB. Make sure you replace the YOUR_API_KEY with your own TMDB API key that you obtained previously.</p>
 <p><code>lib/main.dart</code></p>
 <pre><code>Future&lt;Map&gt; getJson() async {
   var url =
-      &#39;http://api.themoviedb.org/3/discover/movie?api_key=20a3f47c1f9a22b518bf93d335169cca&#39;;
+      &#39;http://api.themoviedb.org/3/discover/movie?api_key=YOUR_API_KEY&#39;;
   http.Response response = await http.get(url);
   return json.decode(response.body);
 }</code></pre>
-<p>Adding the code will give you an error as it require you to have http package. To add the http package, you need to edit the `pubspec.yaml` and add `http:` under dependencies.</p>
-<p>You need to add the http package:</p>
+<p>Adding the code will give you an error as it requires you to have an http package. To add the http package, you need to edit the `pubspec.yaml` and add `http:` under dependencies.</p>
+<p>Pubspec.yml is the file where you can configure a lot of settings such as the name and description of the app, library/packages dependencies that are required, and assets that you are using.</p>
+<p>You need to add the http package under the dependencies, make sure the indentation is correct:</p>
 <p><code>pubspec.yaml</code></p>
 <pre><code>dependencies:
   flutter:
     sdk: flutter
   http:     //Add this line</code></pre>
-<p>Then, press the `Packages get` button that appeared to install the required package.</p>
+<p>Then, press the `Packages get` or `Get Dependencies` button that appeared to install the required package near the top of android studio. Alternatively, you run `flutter pub get` on theterminal.</p>
 <p>Afterwards add these imports on the top of you `main.dart` file.</p>
 <p><code>lib/main.dart</code></p>
 <pre><code>import &#39;dart:async&#39;;
@@ -453,7 +463,7 @@ import &#39;dart:convert&#39;;
 import &#39;package:http/http.dart&#39; as http;</code></pre>
 <p>You should not get an error after this.</p>
 <h2 is-upgraded><strong>Create Stateful Widget for MovieList</strong></h2>
-<p>As now we are fetching data from the internet. The movies data are not constant anymore, since at the start the movies  is empty until the moment the app finished get the data from TMDB. </p>
+<p>As we are fetching data from the internet. The movie data are not constant anymore, since at the start the movies are empty until the moment the app finished getting the data from TMDB. </p>
 <p>Type `stful` on your code and press enter. It will generate the code required to create a Stateful Widget. Name the widget `MovieList`.</p>
 <p>After typing `stful` you should get a code like this:</p>
 <p><code>lib/main.dart</code></p>
@@ -690,7 +700,7 @@ class _MovieListState extends State&lt;MovieList&gt; {
 
       </google-codelab-step>
     
-      <google-codelab-step label="Managing Screens" duration="0">
+      <google-codelab-step label="Managing Screens" duration="10">
         <p>In this section we will learn how to navigate between different screens.</p>
 <h2 is-upgraded><strong>Modularizing code for screens</strong></h2>
 <p>When we have multiple screens for the app, the best practice is to separate each screen into different files to make managing it easier.</p>
@@ -863,10 +873,10 @@ Future&lt;Map&gt; getJson() async {
 
       </google-codelab-step>
     
-      <google-codelab-step label="Creating Detail screen" duration="0">
+      <google-codelab-step label="Creating Detail screen" duration="15">
         <p>In this section, we will create a new screen where we show a detailed info of the movie selected.</p>
 <p>Preview of the detail screen:</p>
-<p class="image-container"><img style="width: 237.75px" src="img\2908832adf584098.png"></p>
+<p class="image-container"><img style="width: 181.50px" src="img\52f50dba3924b6ff.gif"></p>
 <h2 is-upgraded><strong>Plan the layout</strong></h2>
 <p>From the image we can plan how we want to layout the app to achieve the desired look.</p>
 <p>We can see the screen is based on column, a poster, title, the 3 boxes and finally the description.</p>
@@ -1243,7 +1253,7 @@ class Detail extends StatelessWidget {
 
       </google-codelab-step>
     
-      <google-codelab-step label="Map and Routing" duration="0">
+      <google-codelab-step label="Map and Routing" duration="10">
         <p>In Flutter, screens or pages are usually called routes. To start navigating between screens, you need to define all the screens available by setting the routes property in MaterialApp.</p>
 <p>Add the Home and Detail routes to the MaterialApp in `main.dart`</p>
 <p><code>lib/main.dart</code></p>
@@ -1436,6 +1446,7 @@ class Detail extends StatelessWidget {
       <google-codelab-step label="Congratulations" duration="0">
         <p>Congratulations, you have successfully built a Movie App with Flutter! </p>
 <p class="image-container"><img style="width: 328.77px" src="img\813333726db98cc1.gif"></p>
+<p>Feel free to give a star to this <a href="https://github.com/mfrashad/flutter-movie-codelab" target="_blank">workshop </a>if you liked the tutorial.</p>
 
 
       </google-codelab-step>
